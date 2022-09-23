@@ -93,7 +93,7 @@ const loginUser = async (req, res) => {
             return res.status(400).send({ status: false, message: msgEmailData })
         }
         const isEmailUnique = await userModel.findOne({ email });
-        if (isEmailUnique) {
+        if (!isEmailUnique) {
             return res.status(401).send({ status: false, message: "invalid login credentials" });
         }
 
@@ -103,13 +103,13 @@ const loginUser = async (req, res) => {
         }
 
         //Input data verify
-        let Password = await bcrypt.compare(password, loginUser.password)
+        let Password = bcrypt.compare(password, isEmailUnique.password)
         if (!Password) {
             return res.status(401).send({ status: false, message: "invalid login credentials" });
         }
 
         // creating JWT
-        const token = jwt.sign({ userId: loginUser._id }, process.env.secretKey, { expiresIn: "1h" });
+        const token = jwt.sign({ userId: isEmailUnique._id }, process.env.secretKey, { expiresIn: "1h" });
         res.header("x-api-key", token);
         return res.status(200).send({ status: true, message: "login successful", data: token });
 

@@ -31,9 +31,14 @@ const createReviewById = async (req, res) => {
             return res.status(400).send({ status: false, message: msgUserData })
         }
 
-        let msgReviewedByData = isValidUserData.isValidName(reviewedBy)
-        if (msgReviewedByData) {
-            return res.status(400).send({ status: false, message: msgReviewedByData })
+        if (!reviewedBy) {
+            let reviewedBy = "Guest"
+        } else {
+            let msgReviewedByData = isValidUserData.isValidName(reviewedBy)
+            if (msgReviewedByData) {
+                return res.status(400).send({ status: false, message: msgReviewedByData })
+
+            }
         }
 
         let msgRatingData = isValidUserData.isValidRating(rating)
@@ -91,7 +96,7 @@ const updateReviewById = async (req, res) => {
 
         const ReviewId = await reviewModel.findOne({ _id: reviewId, bookId: data, isDeleted: false });
         if (!ReviewId) {
-            return res.status(404).send({ status: false, message: `no review found by ${reviewId}`  });
+            return res.status(404).send({ status: false, message: `no review found by ${reviewId}` });
         }
 
         //Input data validation
@@ -155,7 +160,7 @@ const deleteReviewById = async (req, res) => {
 
         const ReviewId = await reviewModel.findOne({ _id: reviewId, bookId: data, isDeleted: false });
         if (!ReviewId) {
-            return res.status(404).send({ status: false, message: `no review found by ${reviewId}`  });
+            return res.status(404).send({ status: false, message: `no review found by ${reviewId}` });
         }
 
         await reviewModel.findByIdAndUpdate({ _id: reviewId }, { $set: { isDeleted: true } }, { new: true })

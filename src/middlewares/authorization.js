@@ -13,7 +13,6 @@ const authorizetionByBody = async function (req, res, next) {
         if (mongoose.Types.ObjectId.isValid(data.userId) == false) {
             return res.status(400).send({ status: false, message: "userId is not valid" });
         }
-
         if (data.userId != Id) {
             return res.status(403).send({ status: false, msg: "unauthorized person is not allowed" });
         }

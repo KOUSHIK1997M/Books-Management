@@ -20,7 +20,7 @@ const authentication = async function (req, res, next) {
             if (err) {
                 res.status(401).send({ status: false, msg: "Invalid Token" })
             } else {
-                // res.send(author)
+                // res.send(user)
                 req.Id = user.userId;
                 next();
             }
